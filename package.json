@@ -9,6 +9,7 @@
   "author": "markIV",
   "license": "ISC",
   "dependencies": {
+    "audic": "^2.0.0",
     "google-tts-api": "^2.0.2",
     "puppeteer": "^13.0.0"
   }

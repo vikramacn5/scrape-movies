@@ -8,5 +8,11 @@
 
 // await audic.play();
 
-const sound = require("sound-play");
-sound.play("jazz.mp3");
+const Audic = require("audic");
+
+const audic = new Audic("ags.mp3");
+audic.play();
+
+setTimeout(() => {
+  audic.destroy();
+}, 10000);

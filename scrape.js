@@ -1,4 +1,5 @@
 const puppeteer = require("puppeteer");
+const Audic = require("audic");
 
 const scrapeMovie = async function ({ browser, url, movieName, selector }) {
   // console.log(url, movieName, selector);
@@ -62,6 +63,12 @@ const getResult = async () => {
     selector: ".nowshowing h5",
   });
   console.log(resultJazz);
+  if (resultJazz) {
+    const audic = new Audic("jazz.mp3");
+    await audic.play();
+    browser.close();
+    return true;
+  }
 
   const resultAgs = await scrapeMovie({
     browser,
@@ -70,24 +77,38 @@ const getResult = async () => {
     selector: ".col-md-3.movieDivId",
   });
   console.log(resultAgs);
+  if (resultAgs) {
+    const audic = new Audic("ags.mp3");
+    await audic.play();
+    browser.close();
+    return true;
+  }
 
   browser.close();
 };
 
-(() => {
+// (() => {
+//   console.log("scraping...");
+//   console.log(
+//     `${new Date().getHours()}:${new Date().getMinutes()}:${new Date().getSeconds()}`
+//   );
+//   getResult();
+
+// })();
+
+// (async () => {
+//   console.log(await getResult());
+// })();
+
+const intervalId = setInterval(async () => {
   console.log("scraping...");
   console.log(
     `${new Date().getHours()}:${new Date().getMinutes()}:${new Date().getSeconds()}`
   );
-  getResult();
-  setInterval(() => {
-    console.log("scraping...");
-    console.log(
-      `${new Date().getHours()}:${new Date().getMinutes()}:${new Date().getSeconds()}`
-    );
-    getResult();
-  }, 1 * 60 * 1000);
-})();
+  if ((await getResult()) === true) {
+    clearInterval(intervalId);
+  }
+}, 1 * 60 * 1000);
 
 // scrapeMovie("https://www.jazzcinemas.com/");
 // scrapeMovie("https://www.agscinemas.com/");
