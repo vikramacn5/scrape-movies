@@ -1,0 +1,15 @@
+{
+  "name": "scraper",
+  "version": "1.0.0",
+  "description": "",
+  "main": "scrape.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "markIV",
+  "license": "ISC",
+  "dependencies": {
+    "google-tts-api": "^2.0.2",
+    "puppeteer": "^13.0.0"
+  }
+}
