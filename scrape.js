@@ -56,32 +56,40 @@ const getResult = async () => {
   const browser = await puppeteer.launch();
   const movieName = "spider";
 
-  const resultJazz = await scrapeMovie({
-    browser,
-    url: "https://www.jazzcinemas.com/",
-    movieName,
-    selector: ".nowshowing h5",
-  });
-  console.log(resultJazz);
-  if (resultJazz) {
-    const audic = new Audic("jazz.mp3");
-    await audic.play();
-    browser.close();
-    return true;
+  try {
+    const resultJazz = await scrapeMovie({
+      browser,
+      url: "https://www.jazzcinemas.com/",
+      movieName,
+      selector: ".nowshowing h5",
+    });
+    console.log(resultJazz);
+    if (resultJazz) {
+      const audic = new Audic("jazz.mp3");
+      await audic.play();
+      browser.close();
+      return true;
+    }
+  } catch (e) {
+    console.error("error with jazz");
   }
 
-  const resultAgs = await scrapeMovie({
-    browser,
-    url: "https://www.agscinemas.com/",
-    movieName,
-    selector: ".col-md-3.movieDivId",
-  });
-  console.log(resultAgs);
-  if (resultAgs) {
-    const audic = new Audic("ags.mp3");
-    await audic.play();
-    browser.close();
-    return true;
+  try {
+    const resultAgs = await scrapeMovie({
+      browser,
+      url: "https://www.agscinemas.com/",
+      movieName,
+      selector: ".col-md-3.movieDivId",
+    });
+    console.log(resultAgs);
+    if (resultAgs) {
+      const audic = new Audic("ags.mp3");
+      await audic.play();
+      browser.close();
+      return true;
+    }
+  } catch (e) {
+    console.error("error with ags");
   }
 
   browser.close();
