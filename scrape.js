@@ -30,15 +30,15 @@ const scrapeMovie = async function ({ browser, url, movieName, selector }) {
         const movieList = await page.evaluate((selector) => {
           return Array.from(
             document.querySelectorAll(selector),
-            (movie) => movie.title
+            (movie) => movie.textContent
           );
         }, selector);
 
-        // console.log(movieList);
-        const result = movieList.filter((movie) =>
-          movie.toLowerCase().includes(movieName)
-        );
-        resolve(result);
+        // console.log(movieList.map((movie) => movie.toLowerCase().trim()));
+        // const result = movieList.filter(
+        //   (movie) => movie.toLowerCase().trim() === movieName
+        // );
+        resolve(movieList.map((movie) => movie.toLowerCase().trim()));
       }, seconds * 1000);
     });
   };
@@ -46,15 +46,37 @@ const scrapeMovie = async function ({ browser, url, movieName, selector }) {
   // const resultAgs = await findSpiderAgs(2);
 
   const result = await findMovie(2);
-  // console.log(result);
+  console.log(result);
+
+  const isMoviePresent = result.filter(
+    (movie) => movie.includes(movieName) && !movie.includes("beasts")
+    // (movie) => movie === movieName
+  );
+
+  // const includesMovie = result.some((movie) => movie.includes(movieName));
 
   // await browser.close();
-  return result[0] ? true : false;
+  console.log(isMoviePresent);
+  console.log(isMoviePresent.length > 0);
+
+  if (result.length <= 0) {
+    throw new Error("no result");
+  }
+
+  return isMoviePresent.length > 0;
+
+  // return result[0] ? true : false;
+};
+
+const errorCase = async function () {
+  const audic = new Audic("error.mp3");
+  await audic.play();
+  return true;
 };
 
 const getResult = async () => {
   const browser = await puppeteer.launch();
-  const movieName = "spider";
+  const movieName = "beast";
 
   try {
     const resultJazz = await scrapeMovie({
@@ -63,7 +85,7 @@ const getResult = async () => {
       movieName,
       selector: ".nowshowing h5",
     });
-    console.log(resultJazz);
+    // console.log(resultJazz);
     if (resultJazz) {
       const audic = new Audic("jazz.mp3");
       await audic.play();
@@ -72,25 +94,51 @@ const getResult = async () => {
     }
   } catch (e) {
     console.error("error with jazz");
+    // const audic = new Audic('error.mp3');
+    // await audic.play();
+    browser.close();
+    return await errorCase();
   }
 
   try {
-    const resultAgs = await scrapeMovie({
+    const resultPvr = await scrapeMovie({
       browser,
-      url: "https://www.agscinemas.com/",
+      url: "https://www.pvrcinemas.com/nowshowing",
       movieName,
-      selector: ".col-md-3.movieDivId",
+      selector: ".m-title",
     });
-    console.log(resultAgs);
-    if (resultAgs) {
-      const audic = new Audic("ags.mp3");
+    // console.log(resultPvr);
+    if (resultPvr) {
+      const audic = new Audic("pvr.mp3");
       await audic.play();
       browser.close();
       return true;
     }
   } catch (e) {
-    console.error("error with ags");
+    console.error("error with pvr");
+    // const audic = new Audic("error.mp3");
+    // await audic.play();
+    browser.close();
+    return await errorCase();
   }
+
+  // try {
+  //   const resultAgs = await scrapeMovie({
+  //     browser,
+  //     url: "https://www.agscinemas.com/",
+  //     movieName,
+  //     selector: ".col-md-3.movieDivId",
+  //   });
+  //   console.log(resultAgs);
+  //   // if (resultAgs) {
+  //   //   const audic = new Audic("ags.mp3");
+  //   //   await audic.play();
+  //   //   browser.close();
+  //   //   return true;
+  //   // }
+  // } catch (e) {
+  //   console.error("error with ags");
+  // }
 
   browser.close();
 };
