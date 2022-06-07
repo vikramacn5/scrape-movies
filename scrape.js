@@ -49,7 +49,7 @@ const scrapeMovie = async function ({ browser, url, movieName, selector }) {
   console.log(result);
 
   const isMoviePresent = result.filter(
-    (movie) => movie.includes(movieName) && !movie.includes("beasts")
+    (movie) => movie.includes(movieName) && !movie.includes("imax")
     // (movie) => movie === movieName
   );
 
@@ -76,7 +76,7 @@ const errorCase = async function () {
 
 const getResult = async () => {
   const browser = await puppeteer.launch();
-  const movieName = "beast";
+  const movieName = "vikram";
 
   try {
     const resultJazz = await scrapeMovie({
@@ -100,27 +100,27 @@ const getResult = async () => {
     return await errorCase();
   }
 
-  try {
-    const resultPvr = await scrapeMovie({
-      browser,
-      url: "https://www.pvrcinemas.com/nowshowing",
-      movieName,
-      selector: ".m-title",
-    });
-    // console.log(resultPvr);
-    if (resultPvr) {
-      const audic = new Audic("pvr.mp3");
-      await audic.play();
-      browser.close();
-      return true;
-    }
-  } catch (e) {
-    console.error("error with pvr");
-    // const audic = new Audic("error.mp3");
-    // await audic.play();
-    browser.close();
-    return await errorCase();
-  }
+  // try {
+  //   const resultPvr = await scrapeMovie({
+  //     browser,
+  //     url: "https://www.pvrcinemas.com/nowshowing",
+  //     movieName,
+  //     selector: ".m-title",
+  //   });
+  //   // console.log(resultPvr);
+  //   if (resultPvr) {
+  //     const audic = new Audic("pvr.mp3");
+  //     await audic.play();
+  //     browser.close();
+  //     return true;
+  //   }
+  // } catch (e) {
+  //   console.error("error with pvr");
+  //   // const audic = new Audic("error.mp3");
+  //   // await audic.play();
+  //   browser.close();
+  //   return await errorCase();
+  // }
 
   // try {
   //   const resultAgs = await scrapeMovie({

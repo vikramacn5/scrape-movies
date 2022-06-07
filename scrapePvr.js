@@ -121,4 +121,4 @@ const intervalId = setInterval(async () => {
   if (await foundMovie()) {
     clearInterval(intervalId);
   }
-}, 1 * 60 * 1000);
+}, 3 * 60 * 1000);
